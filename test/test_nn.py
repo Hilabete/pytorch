@@ -3740,6 +3740,17 @@ class TestNN(NNTestCase):
         self.assertEqual(mm[0].param[0].item(), 10)
         self.assertEqual(mm[0].sub.weight[0, 0].item(), 555)
 
+    def test_parameter_tags(self):
+        tags = {"optimizer": "sparse"}
+        new_param = Parameter(torch.randn(5, 5), tags=tags)
+        self.assertEqual(new_param.tags, tags)
+
+        new_param_deserialized = pickle.loads(pickle.dumps(new_param))
+        self.assertEqual(new_param_deserialized.tags, tags)
+
+        new_param_copy = deepcopy(new_params)
+        self.assertEqual(new_param_copy.tags, tags)
+
     def test_parameter_assignment(self):
         l = nn.Linear(5, 5)
 
